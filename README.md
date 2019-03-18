@@ -12,7 +12,7 @@ You'll need to setup an API key with Musixmatch:
 
 ## Deployment
 
-Our app is deployed on heroku at:
+Our app is deployed on heroku at: [https://play-app-nicknaaron.herokuapp.com/](https://play-app-nicknaaron.herokuapp.com/)
 
 ## Contributors
 
