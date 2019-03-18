@@ -7,8 +7,8 @@ Respond to a FrontEnd in JavaScript. The full application allows users will util
 
 ## Local Setup
 
-You'll need to setup an API key with Musixmatch: [https://developer.musixmatch.com/documentation]
-(https://developer.musixmatch.com/documentation)
+You'll need to setup an API key with Musixmatch: 
+[https://developer.musixmatch.com/documentation](https://developer.musixmatch.com/documentation)
 
 ## Deployment
 
