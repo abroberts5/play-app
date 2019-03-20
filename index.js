@@ -7,8 +7,8 @@ const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
 const test = process.env.NODE_ENV || 'test';
-const configuration = require('./knexfile')[test];
-const test_database = require('knex')(configuration);
+const test_config = require('./knexfile')[test];
+const test_database = require('knex')(test_config);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
