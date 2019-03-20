@@ -1,3 +1,4 @@
+pry = require('pryjs')
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -15,8 +16,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'play_app';
 
-app.get('/', (request, response) => {
-  response.send('Hello, Publications');
+app.get('/api/v1/favorites', (request, response) => {
+  test_database('favorites').select()
+    .then((favorites) => {
+      response.status(200).json(favorites);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 app.listen(app.get('port'), () => {
@@ -25,5 +32,6 @@ app.listen(app.get('port'), () => {
 
 module.exports = {
   test_database: test_database,
-  database: database
+  database: database,
+  app: app
 }
