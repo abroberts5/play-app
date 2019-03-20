@@ -6,6 +6,10 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
 
+const test = process.env.NODE_ENV || 'test';
+const configuration = require('./knexfile')[test];
+const test_database = require('knex')(configuration);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
@@ -18,3 +22,8 @@ app.get('/', (request, response) => {
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
+
+module.exports = {
+  test_database: test_database,
+  database: database
+}
