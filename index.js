@@ -33,7 +33,18 @@ app.get('/api/v1/favorites/:id', (request, response) => {
       response.status(201).json(favorite);
     })
     .catch((error) => {
-      response.status(500).json({ error });
+      response.status(404).json({ error });
+    });
+  });
+
+app.delete('/api/v1/favorites/:id', (request, response) => {
+  const id = request.params.id
+  test_database('favorites').where('id', id).select()
+    .then((favorite) => {
+      response.status(204).json(favorite);
+    })
+    .catch((error) => {
+      response.status(404).json({ error });
     });
   });
 
