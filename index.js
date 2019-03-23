@@ -32,11 +32,11 @@ app.get('/api/v1/playlists', (request, response) => {
     .from('playlists')
     .join('playlist_favorites', 'playlist_favorites.playlist_id', 'playlists.id')
     .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
-    .where('playlists.id', 69)
     .then(results => {
+      var finalCountdown = [];
       var formattedResponse = {pl_id: 0};
       results.map((data) => {
-        if (data.pl_id != formattedResponse.pl_id) {
+        if (formattedResponse.pl_id === 0) {
         formattedResponse['pl_id'] = data.pl_id;
         formattedResponse['pl_name'] = data.pl_name;
         formattedResponse['favorites'] = [{
@@ -44,6 +44,17 @@ app.get('/api/v1/playlists', (request, response) => {
           artist_name: data.artist_name, genre: data.genre,
           rating: data.rating
         }];
+        finalCountdown.push(formattedResponse);
+      } else if (data.pl_id != formattedResponse.pl_id) {
+        var newPlaylist = {
+        pl_id: data.pl_id,
+        pl_name: data.pl_name,
+        favorites: [{
+          id: data.id, song_name: data.song_name,
+          artist_name: data.artist_name, genre: data.genre,
+          rating: data.rating}]
+        }
+        finalCountdown.push(newPlaylist);
       } else {
           var nextElement = {
           id: data.id, song_name: data.song_name,
@@ -55,7 +66,7 @@ app.get('/api/v1/playlists', (request, response) => {
     });
     test_database('playlists')
       .then((playlists) => {
-        response.status(200).json(formattedResponse)
+        response.status(200).json(finalCountdown)
       })
       .catch((error) => {
         response.status(500).json({error});
