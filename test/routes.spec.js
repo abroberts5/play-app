@@ -101,4 +101,26 @@ describe('API Routes', () => {
     });
   });
 
+  describe('GET /api/v1/favorites/:id', () => {
+    it('should return a show page of one favorite', done => {
+      chai.request(server)
+      .post('/api/v1/favorites')
+      .send({
+        id: 100,
+        song_name: 'Forever My Lady',
+        artist_name: 'Terrible Singer',
+        genre: 'Smooth Jazz',
+        rating: 50
+      });
+      chai.request(server)
+      .get('/api/v1/favorites/100')
+      .end((err, page) => {
+        page.should.have.status(201);
+        page.should.be.json;
+        page.body.should.be.a('array');
+        done();
+      });
+    });
+  });
+
 });
