@@ -32,7 +32,6 @@ app.get('/api/v1/playlists', (request, response) => {
     .from('playlists')
     .join('playlist_favorites', 'playlist_favorites.playlist_id', 'playlists.id')
     .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
-    // .where('playlists.id', 'playlist_favorites.playlist_id')
     .then(results => {
       var finalCountdown = [];
       var formattedResponse = {pl_id: 0};
