@@ -8,6 +8,23 @@ const test_database = require('../index').test_database;
 chai.use(chaiHttp);
 
 describe('API Routes', () => {
+
+  before((done) => {
+  test_database.migrate.latest()
+    .then(() => done())
+    .catch(error => {
+      throw error;
+    });
+  });
+
+  beforeEach((done) => {
+  test_database.seed.run()
+    .then(() => done())
+    .catch(error => {
+      throw error;
+    });
+  });
+
   describe('GET /api/v1/favorites', () => {
     it('should return two favorites', done => {
       chai.request(server)
@@ -49,4 +66,39 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('POST /api/v1/favorites', () => {
+    it('can post a favorite to database', done => {
+      chai.request(server)
+      .post('/api/v1/favorites')
+      .send({
+        song_name: 'Finally Finished Favorite get',
+        artist_name: 'NicknAaron',
+        genre: 'Death Metal',
+        rating: 65
+      })
+      .end((err, page) => {
+        page.should.have.status(201);
+        page.body.should.be.a('object');
+        page.body.should.have.property('id');
+        done();
+      });
+    });
+    it('reports 400 when rating is higher than 100', done => {
+      chai.request(server)
+      .post('/api/v1/favorites')
+      .send({
+        song_name: 'Forever My Lady',
+        artist_name: 'Terrible Singer',
+        genre: 'Smooth Jazz',
+        rating: 101
+      })
+      .end((err, page) => {
+        page.should.have.status(400);
+        page.body.error.should.equal('Rating must be a number between 1 - 100.')
+        done();
+      });
+    });
+  });
+
 });
