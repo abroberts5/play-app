@@ -1,3 +1,4 @@
+const pry = require('pryjs')
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -23,7 +24,44 @@ app.get('/api/v1/favorites', (request, response) => {
     .catch((error) => {
       response.status(500).json({ error });
     });
-});
+  });
+
+app.get('/api/v1/playlists', (request, response) => {
+  const playlist = request.body;
+  test_database.select('playlists.id as pl_id', 'playlists.name as pl_name', 'favorites.*')
+    .from('playlists')
+    .join('playlist_favorites', 'playlist_favorites.playlist_id', 'playlists.id')
+    .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
+    .where('playlists.id', 69)
+    .then(results => {
+      var formattedResponse = {pl_id: 0};
+      results.map((data) => {
+        if (data.pl_id != formattedResponse.pl_id) {
+        formattedResponse['pl_id'] = data.pl_id;
+        formattedResponse['pl_name'] = data.pl_name;
+        formattedResponse['favorites'] = [{
+          id: data.id, song_name: data.song_name,
+          artist_name: data.artist_name, genre: data.genre,
+          rating: data.rating
+        }];
+      } else {
+          var nextElement = {
+          id: data.id, song_name: data.song_name,
+          artist_name: data.artist_name, genre: data.genre,
+          rating: data.rating
+        };
+        formattedResponse['favorites'].push(nextElement);
+      }
+    });
+    test_database('playlists')
+      .then((playlists) => {
+        response.status(200).json(formattedResponse)
+      })
+      .catch((error) => {
+        response.status(500).json({error});
+      });
+    });
+  });
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
