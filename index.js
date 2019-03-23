@@ -26,6 +26,30 @@ app.get('/api/v1/favorites', (request, response) => {
     });
   });
 
+app.post('/api/v1/favorites', (request, response) => {
+  const favorite = request.body;
+
+  for (let requiredParameter of ['song_name', 'artist_name', 'genre', 'rating']) {
+    if (isNaN(favorite['rating']) || favorite['rating'] > 100 || favorite['rating'] < 1) {
+      return response
+      .status(400)
+      .send({ error: 'Rating must be a number between 1 - 100.' })
+    } else if (!favorite[requiredParameter]) {
+      return response
+      .status(201)
+      .send({ error: `Expected format: { song_name: <String>, artist_name: <String>, genre: <String>, rating: <Integer> }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  test_database('favorites').insert(favorite, 'id')
+    .then(favorite => {
+      response.status(201).json({ id: favorite[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.get('/api/v1/playlists', (request, response) => {
   const playlist = request.body;
   test_database.select('playlists.id as pl_id', 'playlists.name as pl_name', 'favorites.*')
