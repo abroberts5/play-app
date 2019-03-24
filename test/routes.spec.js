@@ -123,4 +123,24 @@ describe('API Routes', () => {
     });
   });
 
+  describe('DELETE /api/v1/favorites/:id', () => {
+    it('should delete the favorite', done => {
+      chai.request(server)
+      .post('/api/v1/favorites')
+      .send({
+        id: 25,
+        song_name: 'Cant Wait to get deleted',
+        artist_name: 'Mr Delete',
+        genre: 'Rap',
+        rating: 69
+      });
+      chai.request(server)
+      .delete('/api/v1/favorites/25')
+      .end((err, page) => {
+        page.should.have.status(204);
+        done();
+      });
+    });
+  });
+
 });
