@@ -26,6 +26,17 @@ app.get('/api/v1/favorites', (request, response) => {
     });
   });
 
+app.get('/api/v1/favorites/:id', (request, response) => {
+  const id = request.params.id
+  test_database('favorites').where('id', id).select()
+    .then((favorite) => {
+      response.status(201).json(favorite);
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+  });
+
 app.post('/api/v1/favorites', (request, response) => {
   const favorite = request.body;
 
