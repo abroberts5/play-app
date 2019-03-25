@@ -122,7 +122,6 @@ app.get('/api/v1/playlists', (request, response) => {
 
 app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
   const findPlaylist = request.body;
-  // test_database.select('playlists.id as pl_id', 'playlists.name as pl_name', 'favorites.*')
   test_database.select('playlists.id as pl_id', 'playlists.name as pl_name', 'favorites.*')
     .from('playlists')
     .where('playlists.id', request.params.playlist_id)

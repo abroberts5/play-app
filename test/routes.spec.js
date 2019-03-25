@@ -144,14 +144,38 @@ describe('API Routes', () => {
   });
 
   describe('GET /api/v1/playlists/:playlist_id/favorites', () => {
-    it('should return the one playlist selected', done => {
+    xit('should return the one playlist selected', done => {
       chai.request(server)
       .get('/api/v1/playlists/1010/favorites')
       .end((err, page) => {
         page.should.have.status(201);
         done();
-      })
-    })
+      });
+    });
+  });
+
+  describe('POST /api/v1/playlists/:playlist_id/favorites/:id', () => {
+    it('can post new favorite with a playlist', done => {
+      chai.request(server)
+      .post('POST /api/v1/playlists/1/favorites')
+      .send({
+        id: 1,
+        name: 'Workin It Out',
+        favorites: [{
+          id: 1,
+          song_name: 'Cant Wait to get deleted',
+          artist_name: 'Mr Delete',
+          genre: 'Rap',
+          rating: 69
+        }];
+      });
+      chai.request(server)
+      .get('/api/v1/playlists/1/favorites')
+      .end((err, page) => {
+        page.should.have.status(201);
+        done();
+      });
+    });
   })
 
 });
