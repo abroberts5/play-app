@@ -3,9 +3,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database = require('knex')(configuration);
+const favorites = require('./lib/routes/api/v1/favorites.js');
 
 const test = process.env.NODE_ENV || 'test';
 const test_config = require('./knexfile')[test];
@@ -15,16 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'play_app';
-
-app.get('/api/v1/favorites', (request, response) => {
-  test_database('favorites').select()
-    .then((favorites) => {
-      response.status(200).json(favorites);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-  });
+app.use('/api/v1/favorites', favorites)
 
 app.get('/api/v1/favorites/:id', (request, response) => {
   var enteredId = request.params.id
@@ -155,7 +144,7 @@ app.listen(app.get('port'), () => {
 });
 
 module.exports = {
-  test_database: test_database,
-  database: database,
-  app: app
+  // test_database: test_database,
+  // database: database,
+  app: app,
 }
