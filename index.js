@@ -117,16 +117,19 @@ app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
     .join('playlist_favorites', 'playlist_favorites.playlist_id', 'playlists.id')
     .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
     .then(result => {
+      var finalResult = [];
       var formattedPlaylist = { pl_id: 0 };
       result.map((data) => {
-      if ( formattedPlaylist.pl_id === 0 ) {
-        formattedPlaylist['pl_id'] = data.pl_id;
-        formattedPlaylist['pl_name'] = data.pl_name;
-        formattedPlaylist['favorites'] = [{
-          id: data.id, song_name: data.song_name,
-          artist_name: data.artist_name, genre: data.genre,
-          rating: data.rating}]
+        eval(pry.it);
+        if ( formattedPlaylist.pl_id === 0 ) {
+          formattedPlaylist['pl_id'] = data.pl_id;
+          formattedPlaylist['pl_name'] = data.pl_name;
+          formattedPlaylist['favorites'] = [{
+            id: data.id, song_name: data.song_name,
+            artist_name: data.artist_name, genre: data.genre,
+            rating: data.rating}]
           };
+          finalResult.push(formattedPlaylist);
         })
       });
 

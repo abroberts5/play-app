@@ -3,7 +3,7 @@ const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../index').app;
-const test_database = require('../index').test_database;
+const test_database = require('../lib/models/favorite.js').test_database;
 
 chai.use(chaiHttp);
 
@@ -144,9 +144,9 @@ describe('API Routes', () => {
   });
 
   describe('GET /api/v1/playlists/:playlist_id/favorites', () => {
-    xit('should return the one playlist selected', done => {
+    it('should return the one playlist selected', done => {
       chai.request(server)
-      .get('/api/v1/playlists/1010/favorites')
+      .get('/api/v1/playlists/393/favorites')
       .end((err, page) => {
         page.should.have.status(201);
         done();
@@ -155,7 +155,7 @@ describe('API Routes', () => {
   });
 
   describe('POST /api/v1/playlists/:playlist_id/favorites/:id', () => {
-    it('can post new favorite with a playlist', done => {
+    xit('can post new favorite with a playlist', done => {
       chai.request(server)
       .post('POST /api/v1/playlists/1/favorites')
       .send({
@@ -167,7 +167,7 @@ describe('API Routes', () => {
           artist_name: 'Mr Delete',
           genre: 'Rap',
           rating: 69
-        }];
+        }]
       });
       chai.request(server)
       .get('/api/v1/playlists/1/favorites')
