@@ -3,9 +3,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database = require('knex')(configuration);
+const favorites = require('./lib/routes/api/v1/favorites.js');
 
 const test = process.env.NODE_ENV || 'test';
 const test_config = require('./knexfile')[test];
@@ -15,22 +13,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'play_app';
-
-app.get('/api/v1/favorites', (request, response) => {
-  test_database('favorites').select()
-    .then((favorites) => {
-      response.status(200).json(favorites);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-  });
+app.use('/api/v1/favorites', favorites)
 
 app.get('/api/v1/favorites/:id', (request, response) => {
-  const id = request.params.id
-  test_database('favorites').where('id', id).select()
-    .then((favorite) => {
-      response.status(201).json(favorite);
+  var enteredId = request.params.id
+  test_database('favorites').where('id', enteredId).select()
+    .then((foundFavorite) => {
+      response.status(201).json(foundFavorite);
     })
     .catch((error) => {
       response.status(404).json({ error });
@@ -38,8 +27,8 @@ app.get('/api/v1/favorites/:id', (request, response) => {
   });
 
 app.delete('/api/v1/favorites/:id', (request, response) => {
-  const id = request.params.id
-  test_database('favorites').where('id', id).select()
+  const deletedId = request.params.id
+  test_database('favorites').where('id', deletedId).del()
     .then((favorite) => {
       response.status(204).json(favorite);
     })
@@ -80,7 +69,7 @@ app.get('/api/v1/playlists', (request, response) => {
     .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
     .then(results => {
       var finalCountdown = [];
-      var formattedResponse = {pl_id: 0};
+      var formattedResponse = { pl_id: 0 };
       results.map((data) => {
         if (formattedResponse.pl_id === 0) {
         formattedResponse['pl_id'] = data.pl_id;
@@ -120,12 +109,45 @@ app.get('/api/v1/playlists', (request, response) => {
     });
   });
 
+app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
+  const findPlaylist = request.body;
+  test_database.select('playlists.id as pl_id', 'playlists.name as pl_name', 'favorites.*')
+    .from('playlists')
+    .where('playlists.id', request.params.playlist_id)
+    .join('playlist_favorites', 'playlist_favorites.playlist_id', 'playlists.id')
+    .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
+    .then(result => {
+      var finalResult = [];
+      var formattedPlaylist = { pl_id: 0 };
+      result.map((data) => {
+        eval(pry.it);
+        if ( formattedPlaylist.pl_id === 0 ) {
+          formattedPlaylist['pl_id'] = data.pl_id;
+          formattedPlaylist['pl_name'] = data.pl_name;
+          formattedPlaylist['favorites'] = [{
+            id: data.id, song_name: data.song_name,
+            artist_name: data.artist_name, genre: data.genre,
+            rating: data.rating}]
+          };
+          finalResult.push(formattedPlaylist);
+        })
+      });
+
+    test_database('playlists')
+    .then((findPlaylist) => {
+      response.status(201).json(formattedPlaylist)
+    })
+    .catch((error) => {
+      response.status(404).json({ error });
+    });
+  });
+
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
 
 module.exports = {
-  test_database: test_database,
-  database: database,
-  app: app
+  // test_database: test_database,
+  // database: database,
+  app: app,
 }
