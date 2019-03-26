@@ -7,6 +7,17 @@ const test_database = require('../lib/models/favorite.js').test_database;
 
 chai.use(chaiHttp);
 
+// f you remove the `Knex.del()` in your seed file and add the following
+// code into a `before` block, you may be able to reset everything to an
+// original state
+
+// database.raw("TRUNCATE footnotes restart identity;")
+//      .then(() => database.raw("TRUNCATE papers restart identity CASCADE;"))
+//      .then(() => done())
+//      .catch(error => {
+//        throw error;
+//    });
+
 describe('API Routes', () => {
 
   before((done) => {
@@ -18,12 +29,15 @@ describe('API Routes', () => {
   });
 
   beforeEach((done) => {
-  test_database.seed.run()
-    .then(() => done())
-    .catch(error => {
-      throw error;
+  test_database.raw("TRUNCATE playlist_favorites restart identity;")
+    .then(() => test_database.raw("TRUNCATE playlists restart identity CASCADE;"))
+    .then(() => test_database.raw("TRUNCATE favorites restart identity CASCADE;"))
+    .then(() => test_database.seed.run()
+      .then(() => done())
+      .catch(error => {
+        throw error;
+      }));
     });
-  });
 
   describe('GET /api/v1/favorites', () => {
     it('should return two favorites', done => {
@@ -146,9 +160,17 @@ describe('API Routes', () => {
   describe('GET /api/v1/playlists/:playlist_id/favorites', () => {
     it('should return the one playlist selected', done => {
       chai.request(server)
-      .get('/api/v1/playlists/393/favorites')
+      .get('/api/v1/playlists/1/favorites')
       .end((err, page) => {
         page.should.have.status(201);
+        page.body.pl_id.should.equal(1);
+        page.body.favorites.should.be.a('array');
+        page.body.favorites[0].should.have.property('id');
+        page.body.favorites[0].should.have.property('song_name');
+        page.body.favorites[0].should.have.property('artist_name');
+        page.body.favorites[0].should.have.property('genre');
+        page.body.favorites[0].should.have.property('rating');
+        page.body.favorites[0].rating.should.equal(77);
         done();
       });
     });
@@ -176,6 +198,6 @@ describe('API Routes', () => {
         done();
       });
     });
-  })
+  });
 
 });
