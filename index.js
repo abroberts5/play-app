@@ -2,6 +2,7 @@ const pry = require('pryjs')
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 const favorites = require('./lib/routes/api/v1/favorites.js');
 
@@ -9,6 +10,7 @@ const test = process.env.NODE_ENV || 'test';
 const test_config = require('./knexfile')[test];
 const test_database = require('knex')(test_config);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
@@ -40,7 +42,7 @@ app.delete('/api/v1/favorites/:id', (request, response) => {
 app.post('/api/v1/favorites', (request, response) => {
   const favorite = request.body;
 
-  for (let requiredParameter of ['song_name', 'artist_name', 'genre', 'rating']) {
+  for (let requiredParameter of ['song_name', 'artist_name', 'rating']) {
     if (isNaN(favorite['rating']) || favorite['rating'] > 100 || favorite['rating'] < 1) {
       return response
       .status(400)
@@ -145,6 +147,17 @@ app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
     });
   });
 
+app.post('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
+  const playlistFavorite = request.body;
+
+  test_database('favorites').insert(favorite, 'id')
+  .then(playlistFavorite => {
+    response.status(201).json({ id: playlistFavorite[0] })
+  })
+  .catch(error => {
+    response.status(500).json({ error });
+  });
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);

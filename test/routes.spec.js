@@ -7,17 +7,6 @@ const test_database = require('../lib/models/favorite.js').test_database;
 
 chai.use(chaiHttp);
 
-// f you remove the `Knex.del()` in your seed file and add the following
-// code into a `before` block, you may be able to reset everything to an
-// original state
-
-// database.raw("TRUNCATE footnotes restart identity;")
-//      .then(() => database.raw("TRUNCATE papers restart identity CASCADE;"))
-//      .then(() => done())
-//      .catch(error => {
-//        throw error;
-//    });
-
 describe('API Routes', () => {
 
   before((done) => {
