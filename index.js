@@ -50,7 +50,7 @@ app.post('/api/v1/favorites', (request, response) => {
     } else if (!favorite[requiredParameter]) {
       return response
       .status(201)
-      .send({ error: `Expected format: { song_name: <String>, artist_name: <String>, genre: <String>, rating: <Integer> }. You're missing a "${requiredParameter}" property.` });
+      .send({ error: `Expected format: { song_name: <String>, artist_name: <String>, rating: <Integer> }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
@@ -150,14 +150,22 @@ app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
 app.post('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
   const playlistFavorite = request.body;
 
-  test_database('favorites').insert(favorite, 'id')
-  .then(playlistFavorite => {
-    response.status(201).json({ id: playlistFavorite[0] })
-  })
-  .catch(error => {
-    response.status(500).json({ error });
+  for (let requiredParameter of ['name']) {
+    if (!playlistFavorite[requiredParameter]) {
+      return response
+      .status(404)
+      .send({ error: `Expected format: { name: <String> }. You're missing a "${requiredParameter}" property.` });
+      }
+    }
+
+    test_database('playlists').insert(playlistFavorite, 'id')
+    .then(playlistFavorite => {
+      response.status(201).json({ id: playlistFavorite[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
   });
-});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);

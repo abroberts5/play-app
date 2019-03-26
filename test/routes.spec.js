@@ -166,23 +166,11 @@ describe('API Routes', () => {
   });
 
   describe('POST /api/v1/playlists/:playlist_id/favorites/:id', () => {
-    xit('can post new favorite with a playlist', done => {
+    it('can post new favorite with a playlist', done => {
       chai.request(server)
-      .post('POST /api/v1/playlists/1/favorites')
-      .send({
-        id: 1,
-        name: 'Workin It Out',
-        favorites: [{
-          id: 1,
-          song_name: 'Cant Wait to get deleted',
-          artist_name: 'Mr Delete',
-          genre: 'Rap',
-          rating: 69
-        }]
-      });
-      chai.request(server)
-      .get('/api/v1/playlists/1/favorites')
+      .post('/api/v1/playlists/2/favorites/1')
       .end((err, page) => {
+        eval(pry.it);
         page.should.have.status(201);
         done();
       });
