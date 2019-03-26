@@ -117,30 +117,34 @@ app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
     .join('playlist_favorites', 'playlist_favorites.playlist_id', 'playlists.id')
     .join('favorites', 'playlist_favorites.favorite_id', 'favorites.id')
     .then(result => {
-      var finalResult = [];
-      var formattedPlaylist = { pl_id: 0 };
+      var formattedPlaylist = { pl_id: 0 }; //could call this as a function in later version
       result.map((data) => {
-        eval(pry.it);
-        if ( formattedPlaylist.pl_id === 0 ) {
-          formattedPlaylist['pl_id'] = data.pl_id;
-          formattedPlaylist['pl_name'] = data.pl_name;
-          formattedPlaylist['favorites'] = [{
-            id: data.id, song_name: data.song_name,
-            artist_name: data.artist_name, genre: data.genre,
-            rating: data.rating}]
+        if (formattedPlaylist.pl_id === 0) {
+        formattedPlaylist['pl_id'] = data.pl_id;
+        formattedPlaylist['pl_name'] = data.pl_name;
+        formattedPlaylist['favorites'] = [{
+          id: data.id, song_name: data.song_name,
+          artist_name: data.artist_name, genre: data.genre,
+          rating: data.rating}]
+        } else {
+          var nextElement = {
+          id: data.id, song_name: data.song_name,
+          artist_name: data.artist_name, genre: data.genre,
+          rating: data.rating
           };
-          finalResult.push(formattedPlaylist);
-        })
+         formattedPlaylist['favorites'].push(nextElement);
+        }
       });
-
-    test_database('playlists')
-    .then((findPlaylist) => {
-      response.status(201).json(formattedPlaylist)
-    })
-    .catch((error) => {
-      response.status(404).json({ error });
+      test_database('playlists')
+      .then((foundPlaylist) => {
+        response.status(201).json(formattedPlaylist)
+      })
+      .catch((error) => {
+        response.status(404).json({ error });
+      });
     });
   });
+
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
