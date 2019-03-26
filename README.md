@@ -14,6 +14,11 @@ You'll need to setup an API key with Musixmatch:
 
 Our app is deployed on heroku at: [https://play-app-nicknaaron.herokuapp.com/](https://play-app-nicknaaron.herokuapp.com/)
 
+## Front-End
+
+Please see [Front-End](https://github.com/NickLindeberg/play-app-fe)
+
+
 ## Contributors
 
 * J Aaron Brooks Roberts  [https://github.com/abroberts5](https://github.com/abroberts5)
