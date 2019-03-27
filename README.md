@@ -50,5 +50,5 @@ GET https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
     "created_at": "2019-03-26T20:35:14.167Z",
     "updated_at": "2019-03-26T20:35:14.167Z"
   },
-]```
+]
 
