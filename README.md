@@ -1,4 +1,4 @@
-# play-app
+# play-app-be
 
 ## About the Project
 
@@ -25,3 +25,30 @@ Please see [Front-End](https://github.com/NickLindeberg/play-app-fe)
 * Nick Lindeberg [https://github.com/nicklindeberg](https://github.com/nicklindeberg)
 
 ## Built With
+
+## Endpoints
+
+GET https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
+- Returns a list of your favorites songs that are stored in the database 
+
+[
+  {
+    "id": 1,
+    "song_name": "Cant Wait",
+    "artist_name": "Marty",
+    "genre": "rock",
+    "rating": 88,
+    "created_at": "2019-03-23T21:11:37.879Z",
+    "updated_at": "2019-03-23T21:11:37.879Z"
+  },
+  {
+    "id": 2,
+    "song_name": "Jumping off the Roof",
+    "artist_name": "Jimmy",
+    "genre": "Terrible Music",
+    "rating": 40,
+    "created_at": "2019-03-26T20:35:14.167Z",
+    "updated_at": "2019-03-26T20:35:14.167Z"
+  },
+]
+
