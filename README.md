@@ -31,7 +31,8 @@ Please see [Front-End](https://github.com/NickLindeberg/play-app-fe)
 GET https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
 - Returns a list of your favorites songs that are stored in the database 
 
-```[
+```
+[
   {
     "id": 1,
     "song_name": "Cant Wait",
