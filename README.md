@@ -55,4 +55,16 @@ GET https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
 ```
 
 POST https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
+  - Post to add favorite songs to the database with the following params in the body of your request
+```
+{
+  "favorites": {
+    "id": 1,
+    "name": "We Will Rock You",
+    "artist_name": "Queen"
+    "genre": "Rock",
+    "rating": 88
+  }
+}
 
+```
