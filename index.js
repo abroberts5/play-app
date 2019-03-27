@@ -2,6 +2,7 @@ const pry = require('pryjs')
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 const favorites = require('./lib/routes/api/v1/favorites.js');
 
@@ -9,6 +10,7 @@ const test = process.env.NODE_ENV || 'test';
 const test_config = require('./knexfile')[test];
 const test_database = require('knex')(test_config);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
@@ -40,7 +42,7 @@ app.delete('/api/v1/favorites/:id', (request, response) => {
 app.post('/api/v1/favorites', (request, response) => {
   const favorite = request.body;
 
-  for (let requiredParameter of ['song_name', 'artist_name', 'genre', 'rating']) {
+  for (let requiredParameter of ['song_name', 'artist_name', 'rating']) {
     if (isNaN(favorite['rating']) || favorite['rating'] > 100 || favorite['rating'] < 1) {
       return response
       .status(400)
@@ -48,7 +50,7 @@ app.post('/api/v1/favorites', (request, response) => {
     } else if (!favorite[requiredParameter]) {
       return response
       .status(201)
-      .send({ error: `Expected format: { song_name: <String>, artist_name: <String>, genre: <String>, rating: <Integer> }. You're missing a "${requiredParameter}" property.` });
+      .send({ error: `Expected format: { song_name: <String>, artist_name: <String>, rating: <Integer> }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
@@ -145,6 +147,21 @@ app.get('/api/v1/playlists/:playlist_id/favorites', (request, response) => {
     });
   });
 
+app.post('/api/v1/playlists/:playlist_id/favorites/:id', (request, response) => {
+  const playlistFavorite = request.params;
+
+  test_database('playlist_favorites').insert({
+    playlist_id: request.params.playlist_id,
+    favorite_id: request.params.id
+  })
+  .then(playlistFavorite => {
+    response.status(201).json("successfully added")
+  })
+  .catch(error => {
+    response.status(500).json({ error });
+    console.log(error);
+  });
+});
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);

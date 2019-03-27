@@ -7,17 +7,6 @@ const test_database = require('../lib/models/favorite.js').test_database;
 
 chai.use(chaiHttp);
 
-// f you remove the `Knex.del()` in your seed file and add the following
-// code into a `before` block, you may be able to reset everything to an
-// original state
-
-// database.raw("TRUNCATE footnotes restart identity;")
-//      .then(() => database.raw("TRUNCATE papers restart identity CASCADE;"))
-//      .then(() => done())
-//      .catch(error => {
-//        throw error;
-//    });
-
 describe('API Routes', () => {
 
   before((done) => {
@@ -177,24 +166,12 @@ describe('API Routes', () => {
   });
 
   describe('POST /api/v1/playlists/:playlist_id/favorites/:id', () => {
-    xit('can post new favorite with a playlist', done => {
+    it('can post new favorite with a playlist', done => {
       chai.request(server)
-      .post('POST /api/v1/playlists/1/favorites')
-      .send({
-        id: 1,
-        name: 'Workin It Out',
-        favorites: [{
-          id: 1,
-          song_name: 'Cant Wait to get deleted',
-          artist_name: 'Mr Delete',
-          genre: 'Rap',
-          rating: 69
-        }]
-      });
-      chai.request(server)
-      .get('/api/v1/playlists/1/favorites')
+      .post('/api/v1/playlists/2/favorites/1')
       .end((err, page) => {
         page.should.have.status(201);
+        page.body.should.equal("successfully added")
         done();
       });
     });
