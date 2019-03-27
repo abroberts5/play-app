@@ -170,8 +170,8 @@ describe('API Routes', () => {
       chai.request(server)
       .post('/api/v1/playlists/2/favorites/1')
       .end((err, page) => {
-        eval(pry.it);
         page.should.have.status(201);
+        page.body.should.equal("successfully added")
         done();
       });
     });
