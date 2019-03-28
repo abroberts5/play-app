@@ -17,7 +17,7 @@ Our app is deployed on heroku at: [https://play-app-nicknaaron.herokuapp.com/](h
 ## Front-End
 
 Please see [Front-End](https://github.com/NickLindeberg/play-app-fe)
-
+![Play Updated Playlist](https://user-images.githubusercontent.com/40776966/55120909-87450800-50bd-11e9-8aee-cbd4abbb18a3.png)
 
 ## Contributors
 
@@ -25,6 +25,9 @@ Please see [Front-End](https://github.com/NickLindeberg/play-app-fe)
 * Nick Lindeberg [https://github.com/nicklindeberg](https://github.com/nicklindeberg)
 
 ## Built With
+* node [https://www.npmjs.com/](https://www.npmjs.com/)
+* express [https://www.npmjs.com/package/express](https://www.npmjs.com/package/express)
+* knex [https://www.npmjs.com/package/knex](https://www.npmjs.com/package/knex)
 
 ## Endpoints
 
