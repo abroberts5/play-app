@@ -54,6 +54,20 @@ GET https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
 ]
 ```
 
+GET https://play-app-nicknaaron.herokuapp.com/api/v1/favorites/1
+  - Get favorite song by id passed in through params
+```
+[
+  {
+    "id": 1,
+    "name": "Really Cool Song",
+    "artist_name": "Josh"
+    "genre": "Rock",
+    "rating": 77
+  }
+]
+```
+
 POST https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
   - Post to add favorite songs to the database with the following params in the body of your request
 ```
@@ -67,4 +81,83 @@ POST https://play-app-nicknaaron.herokuapp.com/api/v1/favorites
   }
 }
 
+```
+
+DELETE https://play-app-nicknaaron.herokuapp.com/api/v1/favorites/1
+  - Deletes favorite song by id passed in through params
+ ```
+  * No return value, rerun GET favorites index and favorite is deleted
+ ```
+ 
+ GET https://play-app-nicknaaron.herokuapp.com/api/v1/playlists
+  - Returns a list of your playlists and their favorites stored in the database 
+```
+[
+  {
+     "id": 1,
+     "playlist_name": "Favorite songs of all time",
+     "favorites": [
+       {
+         "id": 1,
+         "name": "We Will Rock You",
+         "artist_name": "Queen"
+         "genre": "Rock",
+         "rating": 88
+       },
+       {
+         "id": 2,
+         "name": "Careless Whisper",
+         "artist_name": "George Michael"
+         "genre": "Pop",
+         "rating": 93
+         }
+     ]
+ },
+ {
+     "id": 2,
+     "name": "Other amazing songs",
+     "favorites": [
+       {
+         "id": 1,
+         "name": "We Will Rock You",
+         "artist_name": "Queen"
+         "genre": "Rock",
+         "rating": 88
+        },
+     ]
+ },
+]
+```
+
+GET https://play-app-nicknaaron.herokuapp.com/api/v1/playlists/:playlist_id/favorites
+  - Returns all the favorites associated with the playlist with an id specified by :playlist_id
+```
+{
+   "id": 1,
+   "playlist_name": "Favorite songs of all time",
+   "favorites": [
+     {
+       "id": 1,
+       "name": "We Will Rock You",
+       "artist_name": "Queen"
+       "genre": "Rock",
+       "rating": 88
+     },
+     {
+       "id": 2,
+       "name": "Careless Whisper",
+       "artist_name": "George Michael"
+       "genre": "Pop",
+       "rating": 93
+       }
+    ]
+ },
+```
+
+POST https://play-app-nicknaaron.herokuapp.com/api/v1/playlists/:playlist_id/favorites/:id
+ - Adds the favorite with :id to the playlist with :playlist_id. This creates a new record in the Playlist Favorites table to establish the relationship between this song favorite and playlist.
+```
+{
+  "message": "successfully added"
+}
 ```
